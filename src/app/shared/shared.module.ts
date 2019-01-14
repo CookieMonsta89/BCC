@@ -21,6 +21,7 @@ import {
   MatSortModule,
   MatTableModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatFormFieldModule,
   MatSelectModule,
 } from '@angular/material';
@@ -47,6 +48,7 @@ import {
     MatSortModule,
     MatTableModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,
@@ -71,6 +73,7 @@ import {
     MatSortModule,
     MatTableModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
     FlexLayoutModule,

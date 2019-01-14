@@ -11,8 +11,17 @@ const localLogin = new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
   let user = await User.findOne({ email });
-  if (!user || !bcrypt.compareSync(password, user.hashedPassword)) {
-    return done(null, false, { error: 'Your login details could not be verified. Please try again.' });
+  if (!user) {
+    function x() {
+      const promise = new Promise(function(resolve, reject) {
+        setTimeout(() => resolve('done!'), 2500);
+      });
+      return promise;
+    }
+    const result = await x();
+    return done(null, false);
+  } else if (!bcrypt.compareSync(password, user.hashedPassword)) {
+    return done(null, false);
   }
   user = user.toObject();
   delete user.hashedPassword;

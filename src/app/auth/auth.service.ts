@@ -18,12 +18,22 @@ export class AuthService {
       this.http.post('/api/auth/login', {
         email,
         password
-      }).subscribe((data : any) => {
-          observer.next({user: data.user});
-          this.setUser(data.user);
-          this.token.saveToken(data.token);
+      }).subscribe((res : any) => {
+        if (!res.success) {
+          observer.next({success: false, errors: res.errors });
+          this.signOut();
           observer.complete();
-      })
+        } else {
+          observer.next({success: true, data: {user: res.data.user} });
+          this.setUser(res.data.user);
+          this.token.saveToken(res.data.token);
+          observer.complete();
+        }
+      }, (err: any) => {
+        observer.error(err);
+        this.signOut();
+        observer.complete();
+      });
     });
   }
 
@@ -57,9 +67,9 @@ export class AuthService {
     return Observable.create(observer => {
       const tokenVal = this.token.getToken();
       if (!tokenVal) return  observer.complete();
-      this.http.get('/api/auth/me').subscribe((data : any) => {
-        observer.next({user: data.user});
-        this.setUser(data.user);
+      this.http.get('/api/auth/me').subscribe((res : any) => {
+        observer.next({user: res.data.user});
+        this.setUser(res.data.user);
         observer.complete();
       })
     });

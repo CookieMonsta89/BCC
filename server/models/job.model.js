@@ -47,6 +47,7 @@ const JobSchema = new mongoose.Schema({
       required: true,
       validate: /^\d{10}$/,
       get: function(ph) {
+        if (!ph) { return ''; }
         return `(${ph.slice(0, 3)}) ${ph.slice(3, 6)}-${ph.slice(6, 10)}`;
       }
     },

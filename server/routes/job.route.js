@@ -11,10 +11,11 @@ router.post('/', passport.authenticate('jwt', { session: false }), insert);
 
 async function getAll(req, res) {
   const jobs = await jobCtrl.getAll();
-  res.json(jobs);
+  res.json({ success: true, data: jobs });
 }
 
 async function insert(req, res) {
-  let job = await jobCtrl.insert(req.body);
-  res.json(job);
+  await jobCtrl.insert(req.body).then(data => {
+    res.json({ success: true, data });
+  }).catch(err => res.json({ success: false, errors: [err.message] }));
 }
