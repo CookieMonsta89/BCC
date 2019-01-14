@@ -23,7 +23,7 @@ const jwtLogin = new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: config.jwtSecret
 }, async (payload, done) => {
-  let user = await User.findById(payload._id);
+  let user = await User.findById(payload.data._id);
   if (!user) {
     return done(null, false);
   }

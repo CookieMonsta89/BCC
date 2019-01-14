@@ -8,6 +8,8 @@ module.exports = {
 
 
 function generateToken(user) {
-  const payload = JSON.stringify(user);
-  return jwt.sign(payload, config.jwtSecret);
+  return jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60),
+    data: user,
+  }, config.jwtSecret);
 }
