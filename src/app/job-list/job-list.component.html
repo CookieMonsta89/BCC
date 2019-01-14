@@ -3,7 +3,7 @@
     <mat-card-title>Add New Job</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form>
+    <form *ngIf="!loadingForm">
       <table [formGroup]="jobForm">
         <tr>
           <td>
@@ -64,27 +64,46 @@
         </tr>
       </table>
     </form>
+    <div *ngIf="loadingForm" class="center-card">
+      <mat-progress-spinner *ngIf="loadingForm" [mode]="'indeterminate'"></mat-progress-spinner>
+    </div>
   </mat-card-content>
-  <mat-card-actions>
+  <mat-card-actions align="center">
     <button mat-raised-button (click)="createJob()" color="primary">Create Job</button>
   </mat-card-actions>
 </mat-card>
 
-<mat-table #table [dataSource]="dataSource" matSort *ngIf="!loading">
-  <ng-container *ngFor="let col of columnDefs" [matColumnDef]="col.name">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>{{ col.title }}</mat-header-cell>
-    <mat-cell class="table-cell" *matCellDef="let row">
-      {{ getProperty(row, col.name) }}
-    </mat-cell>
-  </ng-container>
+<div *ngIf="!loadingTable">
+  <div class="mat-elevation-z8 job-table-filter">
+    <mat-form-field class="most-width">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Jobs">
+    </mat-form-field>
+  </div>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+  <mat-card *ngIf="!dataSource?.filteredData.length">
+    <div><span>Zero Jobs match the filter</span></div>
+  </mat-card>
+</div>
 
-<mat-card *ngIf="loading" class="center-card">
-  <mat-progress-spinner
-    color="primary"
-    mode="indeterminate">
-  </mat-progress-spinner>
+<mat-card *ngIf="dataSource?.filteredData.length || loadingTable" class="job-table">
+  <mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container *ngFor="let col of columnDefs" [matColumnDef]="col.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ col.title }}</mat-header-cell>
+      <mat-cell class="table-cell" *matCellDef="let row">
+        {{ getProperty(row, col.name) }}
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-card *ngIf="loadingTable" class="center-card">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 </mat-card>

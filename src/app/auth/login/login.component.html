@@ -21,7 +21,9 @@
         </tr>
       </table>
     </form>
-    <mat-progress-spinner *ngIf="loading" [mode]="'indeterminate'"></mat-progress-spinner>
+    <div *ngIf="loading" class="center-card">
+      <mat-progress-spinner *ngIf="loading" [mode]="'indeterminate'"></mat-progress-spinner>
+    </div>
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button (click)="login()" color="primary">Login</button>

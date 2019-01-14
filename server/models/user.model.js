@@ -22,12 +22,17 @@ const UserSchema = new mongoose.Schema({
   },
   roles: [{
     type: String,
-    enum: ["admin","general"],
-    default: "general"
+    enum: ["admin","general"]
   }]
 }, {
   versionKey: false
 });
 
+UserSchema.pre("save",function(next) {
+  if (this.roles.length == 0) {
+    this.roles.push("general");
+  }
+  next();
+});
 
 module.exports = mongoose.model('User', UserSchema);

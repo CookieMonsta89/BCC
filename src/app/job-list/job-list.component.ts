@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/forms';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { NotifierService } from 'angular-notifier';
 
@@ -24,10 +24,27 @@ export interface Job {
 export class JobListComponent implements OnInit {
 
   private readonly notifier: NotifierService;
-  dataSource;
-  loading: boolean;
+  dataSource = new MatTableDataSource<Job>();
+  loadingTable: boolean;
+  loadingForm: boolean;
   displayedColumns = [];
-  @ViewChild(MatSort) sort: MatSort;
+  private paginator: MatPaginator;
+  private sort: MatSort;
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  setDataSourceAttributes() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
   columnDefs = [
     {name: 'identifier', title: 'Job Identifier'},
     {name: 'owner.name.full', title: 'Owner Name'},
@@ -70,29 +87,51 @@ export class JobListComponent implements OnInit {
     path.split('.').reduce((o, p) => o && o[p], obj)
   )
 
+  nestedFilterCheck(search, data, key) {
+    if (typeof data[key] === 'object') {
+      for (const k in data[key]) {
+        if (data[key][k] !== null) {
+          search = this.nestedFilterCheck(search, data[key], k);
+        }
+      }
+    } else if (this.columnDefs.map(cd => cd.name.split('.')[cd.name.split('.').length - 1]).includes(key)) {
+      search += data[key] + ' ';
+    }
+    return search;
+  }
+
   ngOnInit() {
     this.displayedColumns = this.columnDefs.map(cd => cd.name);
-    this.loading = false;
+    this.loadingTable = false;
+    this.loadingForm = false;
     this.loadTable();
   }
 
   loadTable() {
-    this.loading = true;
+    this.loadingTable = true;
     this.http.get('/api/jobs').subscribe((res : any) => {
-      this.loading = false;
+      this.loadingTable = false;
       if (!res.success) {
         this.notifier.notify('error', `Failed to retrieve Jobs. ${res.errors.join(' ')}`);
       } else {
         this.notifier.notify('success', 'Jobs retrieved successfully.');
         this.dataSource = new MatTableDataSource(res.data);
+        this.dataSource.filterPredicate = (data, filter: string)  => {
+          const accumulator = (currentTerm, key) => {
+            return this.nestedFilterCheck(currentTerm, data, key);
+          };
+          const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+          // Transform the filter by converting it to lowercase and removing whitespace.
+          const transformedFilter = filter.trim().toLowerCase();
+          return dataStr.indexOf(transformedFilter) !== -1;
+        };
         this.dataSource.sortingDataAccessor = (obj, property) => this.getProperty(obj, property);
         this.dataSource.sort = this.sort;
       }
     }, (err: any) => {
-      this.loading = false;
+      this.loadingTable = false;
       this.notifier.notify('error', `Failed to retrieve Jobs. ${err}`);
       this.dataSource = new MatTableDataSource([]);
-      this.dataSource.sort = this.sort;
     });
   }
 
@@ -147,9 +186,9 @@ export class JobListComponent implements OnInit {
         }
       }
     }
-    this.loading = true;
+    this.loadingForm = true;
     this.http.post('/api/jobs', body).subscribe((res : any) => {
-      this.loading = false;
+      this.loadingForm = false;
       if (!res.success) {
         this.notifier.notify('error', `Failed to create Job. ${res.errors.join(' ')}`);
       } else {
@@ -158,9 +197,17 @@ export class JobListComponent implements OnInit {
         this.jobForm.reset();
       }
     }, err => {
-      this.loading = false;
+      this.loadingForm = false;
       this.notifier.notify('error', `Failed to create Job. ${err.message}`);
     });
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
 }
