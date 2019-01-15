@@ -94,8 +94,15 @@
       </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="updateButtonColumn">
+      <mat-header-cell *matHeaderCellDef>Update Job</mat-header-cell>
+      <mat-cell class="table-cell" *matCellDef="let row">
+        <button mat-raised-button (click)="goToDetails(row)" color="primary"><mat-icon>edit</mat-icon></button>
+      </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetails(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
   <mat-card *ngIf="loadingTable" class="center-card">

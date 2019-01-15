@@ -93,6 +93,7 @@ export class JobListComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = this.columnDefs.map(cd => cd.name);
+    this.displayedColumns.push('updateButtonColumn');
     this.loadingTable = false;
     this.loadingForm = false;
     this.loadTable();
