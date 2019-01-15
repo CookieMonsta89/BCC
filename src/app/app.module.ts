@@ -7,23 +7,22 @@ import { NotifierModule } from 'angular-notifier';
 
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
-
-import { AppComponent } from './app.component';
+import { JobModule } from './job/job.module';
 import { AdminModule } from './admin/admin.module';
+import { AppRoutingModule } from './app-routing/app-routing.module';
+
 import { AuthHeaderInterceptor } from './interceptors/header.interceptor';
 import { CatchErrorInterceptor } from './interceptors/http-error.interceptor';
 
-import { AppRoutingModule } from './app-routing/app-routing.module';
+import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
-import { JobListComponent } from './job-list/job-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    JobListComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,8 +32,9 @@ import { JobListComponent } from './job-list/job-list.component';
     SharedModule,
     AuthModule,
     AdminModule,
-    AppRoutingModule,
+    JobModule,
     NotifierModule,
+    AppRoutingModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

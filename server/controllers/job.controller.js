@@ -23,7 +23,9 @@ const JobSchema = Joi.object({
 
 module.exports = {
   insert,
-  getAll
+  getAll,
+  getOne,
+  update,
 }
 
 async function insert(job) {
@@ -32,6 +34,16 @@ async function insert(job) {
   return await new Job(job).save();
 }
 
+async function update(job) {
+  job.owner.phoneNumber = job.owner.phoneNumber.match(/\d/g).map(Number).join('');
+  return await Job.updateOne({ number: job.number }, job);
+}
+
+
 async function getAll() {
   return await Job.find().sort({ identifier: 'asc' });
+}
+
+async function getOne(jobNumber) {
+  return await Job.findOne({ number: jobNumber });
 }

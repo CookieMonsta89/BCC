@@ -5,16 +5,7 @@ import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/f
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { NotifierService } from 'angular-notifier';
-
-export interface Job {
-  identifier: string;
-  owner: {
-    name: {
-      first: string;
-      last: string;
-    },
-  }
-}
+import { Job } from '../job.model';
 
 @Component({
   selector: 'app-job-list',
@@ -208,6 +199,10 @@ export class JobListComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  goToDetails(row) {
+    this.router.navigate([`/job/detail/${row.number}`]);
   }
 
 }

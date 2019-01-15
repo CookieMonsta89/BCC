@@ -1,1 +1,13 @@
-<app-job-list></app-job-list>
+<mat-card class="example-card">
+  <mat-card-header class="center-card">
+    <mat-card-title class="center-card">View Jobs</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="center-card">
+    <p class="center-card">
+      Click the button below to view Jobs and be able to create new Jobs.
+    </p>
+  </mat-card-content>
+  <mat-card-actions align="center">
+    <a [routerLink]="['/job/list']">Go to Job List</a>
+  </mat-card-actions>
+</mat-card>
