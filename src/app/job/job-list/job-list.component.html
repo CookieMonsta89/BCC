@@ -101,6 +101,13 @@
       </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="createContractColumn">
+      <mat-header-cell *matHeaderCellDef>Create Contract</mat-header-cell>
+      <mat-cell class="table-cell" *matCellDef="let row">
+        <button mat-raised-button (click)="createContract(row)" color="primary"><mat-icon>description</mat-icon></button>
+      </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
