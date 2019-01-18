@@ -1,7 +1,9 @@
 const express = require('express');
 const passport = require('passport');
+const JSZip = require('jszip');
+const Docxtemplater = require('docxtemplater');
+const expressions= require('angular-expressions');
 const path = require('path');
-const officegen = require('officegen');
 const fs = require('fs');
 const jobCtrl = require('../controllers/job.controller');
 const Job = require('../models/job.model');
@@ -46,229 +48,51 @@ async function getContract(req, res) {
     'Content-disposition': `attachment; filename=${filename}`
     });
 
-  let docx = officegen('docx');
+    //Load the docx file as a binary
+  var content = fs.readFileSync(path.resolve(__dirname, '../contracts/templates', 'BCC Contract Template - v1.docx'), 'binary');
 
-  docx.on('finalize', function(written) {
-    // ...
-  });
+  var zip = new JSZip(content);
 
-  docx.on('error', function(err) {
-    // ...
-  });
-  let currentPageNumber = 1;
-  const totalPages = 13;
-  let footer = docx.getFooter().createP();
-  footer.options.align = 'center';
-  footer.addText ( `Owner  _____    Contractor  _____                      ${filename}                      Page ${currentPageNumber} of ${totalPages}`, { font_face: 'Times New Roman', font_size: 8 });
-
-  let pObj = docx.createP();
-  pObj.options.align = 'center';
-  pObj.addText( 'CONSTRUCTION CONTRACT – FIXED PRICE', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-
-  pObj = docx.createP();
-  pObj.addText( `THIS AGREEMENT, executed on ${today.toLocaleDateString("en-US", options)}`, { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.addText( 'Between the Owner:', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( `${job.owner.name.full}`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `${job.owner.address.street}`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `${job.owner.address.city}, ${job.owner.address.state} ${job.owner.address.zipcode} `, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `${job.owner.email}`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `${job.owner.phoneNumber}`, { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.addText( 'And the Contractor:', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( `Brevard Construction Company`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `David Hicks, Vice President`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `1909 Cocoa Blvd.`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `Cocoa, FL 32922`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `Dhicks@brevardconstruction.com`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `Florida License Numbers RG291103905 & RC29027623`, { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-  pObj.addText( `321-301-6000`, { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.addText( 'For the Project:', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( 'See attached estimate and specifications for the specific scope of work.', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.addText( 'Construction Lender:', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( 'N/A', { font_face: 'Times New Roman', font_size: 12 } );
-
-  docx.putPageBreak();
-  currentPageNumber = currentPageNumber + 1;
-
-  pObj = docx.createP();
-  pObj.options.align = 'center';
-  pObj.addText( 'ARTICLE 1. CONTRACT DOCUMENTS', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-
-  pObj = docx.createP();
-  pObj.addText( '1.1.', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    The Contract Documents consist of this agreement, general conditions, estimate worksheet attached (Estimate), specifications attached (Specifications) and all Change Orders (if any) or modifications issued and agreed to by both parties. All documents noted herein shall be provided to the Owner by the Contractor. These Contract documents represent the entire agreement of both parties and supersede any prior oral or written agreement.', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.align = 'center';
-  pObj.addText( 'ARTICLE 2. SCOPE OF WORK', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-
-  pObj = docx.createP();
-  pObj.addText( '2.1.', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    The Owner agrees to purchase and the Contractor agrees to construct the above-mentioned Project with fixtures attached thereto in ___________________, County of Brevard and State of Florida, according to this Contract, the attached Estimate, attached Specifications and future agreed upon Change Orders as specified in Article 8.', { font_face: 'Times New Roman', font_size: 12 } );
-
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( '2.1.1', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    Construction Plans', { font_face: 'Times New Roman', font_size: 12 } );
-
-  var table = [
-    [{
-      val: "Page Description",
-      opts: {
-        cellColWidth: 2160,
-        b:true,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
+  var angularParser = function(tag) {
+    return {
+      get: tag === '.' ? function(s){ return s;} : function(s) {
+        return expressions.compile(tag.replace(/(’|“|”)/g, "'"))(s);
       }
-    },{
-      val: "Consultant",
-      opts: {
-        cellColWidth: 2160,
-        b:true,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    },{
-      val: "Origination Date",
-      opts: {
-        cellColWidth: 2160,
-        b:true,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }, {
-      val: "Revision Date",
-      opts: {
-        cellColWidth: 2160,
-        b:true,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }],
-    [{
-      val: "N/A",
-      opts: {
-        cellColWidth: 2160,
-        b:false,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }, {
-      val: "",
-      opts: {
-        cellColWidth: 2160,
-        b:false,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }, {
-      val: "",
-      opts: {
-        cellColWidth: 2160,
-        b:false,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }, {
-      val: "",
-      opts: {
-        cellColWidth: 2160,
-        b:false,
-        sz: '20',
-        shd: {
-          fill: "FFFFFF",
-        },
-        fontFamily: "Times New Roman"
-      }
-    }],
-  ]
+    };
+  }
+  var doc = new Docxtemplater().loadZip(zip).setOptions({parser:angularParser});
 
-  var tableStyle = {
-    tableColWidth: 2160,
-    tableSize: 24,
-    tableAlign: "left",
-    tableColor: "000000",
-    tableFontFamily: "Times New Roman",
-    borders: true
+  let data = {
+      today: today_string,
+      job: job.toJSON(),
+  };
+  console.log(data);
+
+  //set the templateVariables
+  doc.setData(data);
+
+  try {
+      // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+      doc.render()
+  }
+  catch (error) {
+      var e = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+          properties: error.properties,
+      }
+      console.log(JSON.stringify({error: e}));
+      // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+      throw error;
   }
 
-  docx.createTable(table, tableStyle);
-  pObj = docx.createP();
+  var buf = doc.getZip().generate({type: 'nodebuffer'});
 
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( '2.1.2', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    Construction Estimate dated ___________, 20__ attached hereto. The scope of work in this contract is contained there-in.', { font_face: 'Times New Roman', font_size: 12 } );
+  fs.writeFileSync(path.resolve(__dirname, '../contracts', filename), buf);
 
-  pObj = docx.createP();
-  pObj.options.indentLeft = 1440; // Indent left 1 inch
-  pObj.addText( '2.1.3', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    Specifications dated ___________, 20__ attached hereto. The specifications for this contract are contained there-in.', { font_face: 'Times New Roman', font_size: 12 } );
-  pObj.addLineBreak ();
-
-  pObj = docx.createP();
-  pObj.options.align = 'center';
-  pObj.addText( 'ARTICLE 3. TIME OF COMPLETION', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-
-  pObj = docx.createP();
-  pObj.addText( '3.1.', { font_face: 'Times New Roman', font_size: 12, bold: true } );
-  pObj.addText( '    The approximate commencement date of the Project shall be ______________ or within seven days after the County issues a permit, whichever is later, and the project should take approximately ______ working days to complete. Completion date is subject to: Change Orders; unusual weather may delay or otherwise affect the completion date; complications with material availability due to no fault of the Contractor; changes in scope of work as addressed in Article 8; Regulatory delays in permitting/inspections not through negligence of the Contractor; or Owner related delays.', { font_face: 'Times New Roman', font_size: 12 } );
-
-
-
-
-
-  docx.generate(res);
+  // buf is a nodejs buffer, you can either write it to a file or do anything else with it.
+  res.end(buf);
 }
 
 async function insert(req, res) {
