@@ -14,7 +14,7 @@ const JobSchema = Joi.object({
       street: Joi.string().required(),
       city: Joi.string().required(),
       state: Joi.string().required(),
-      zipcode: Joi.number().integer().required(),
+      zipcode: Joi.string().required(),
     },
     phoneNumber: Joi.string().regex(/^\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/).required(),
   },
