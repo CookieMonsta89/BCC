@@ -1,79 +1,170 @@
-<mat-card class="half-card">
-  <mat-card-content>
-    <button mat-raised-button routerLink="/job/list" color="primary">Back to Job List</button>
-  </mat-card-content>
-</mat-card>
-<mat-card class="half-card">
-  <mat-card-header>
-    <mat-card-title>Update Job</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form *ngIf="!loadingForm">
-      <table [formGroup]="jobForm">
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Job Number" formControlName="jobNumber" name="jobNumber" required readonly>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="First Name" formControlName="ownerFirstName" name="ownerFirstName" required>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Last Name" formControlName="ownerLastName" name="ownerLastName" required>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Phone Number" formControlName="ownerPhoneNumber" name="ownerPhoneNumber" required>
-              <mat-error *ngIf="ownerPhoneNumber.invalid && ownerPhoneNumber.errors.pattern">Invalid phone number</mat-error>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Email" formControlName="ownerEmail" name="ownerEmail" required>
-              <mat-error *ngIf="ownerEmail.invalid && ownerEmail.errors.email">Invalid email address</mat-error>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Street Address" formControlName="ownerStreetAddress" name="ownerStreetAddress" required>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="City" formControlName="ownerCity" name="ownerCity" required>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="State" formControlName="ownerState" name="ownerState" required>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Zipcode" formControlName="ownerZipcode" name="ownerZipcode" required>
-            </mat-form-field>
-          </td>
-        </tr>
-      </table>
-    </form>
-    <div *ngIf="loadingForm" class="center-card">
-      <mat-progress-spinner *ngIf="loadingForm" [mode]="'indeterminate'"></mat-progress-spinner>
+<div fxLayout="column">
+  <div fxFlex="100%">
+    <mat-card>
+      <mat-card-content>
+        <button mat-raised-button routerLink="/job/list" color="primary"><mat-icon>arrow_back</mat-icon> Back to Job List</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxLayout="row" fxLayout.md="column">
+    <div fxFlex="50%">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Update Job</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form *ngIf="!loadingForm">
+            <table [formGroup]="jobForm">
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Job Number" formControlName="jobNumber" name="jobNumber" required readonly>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="First Name" formControlName="ownerFirstName" name="ownerFirstName" required>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Last Name" formControlName="ownerLastName" name="ownerLastName" required>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Phone Number" formControlName="ownerPhoneNumber" name="ownerPhoneNumber" required>
+                    <mat-error *ngIf="ownerPhoneNumber.invalid && ownerPhoneNumber.errors.pattern">Invalid phone number</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="ownerEmail" name="ownerEmail" required>
+                    <mat-error *ngIf="ownerEmail.invalid && ownerEmail.errors.email">Invalid email address</mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Street Address" formControlName="ownerStreetAddress" name="ownerStreetAddress" required>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="City" formControlName="ownerCity" name="ownerCity" required>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="State" formControlName="ownerState" name="ownerState" required>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Zipcode" formControlName="ownerZipcode" name="ownerZipcode" required>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+          </form>
+          <div *ngIf="loadingForm" class="center-card">
+            <mat-progress-spinner *ngIf="loadingForm" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="center">
+          <button mat-raised-button (click)="updateJob()" color="primary">Update Job</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-  </mat-card-content>
-  <mat-card-actions align="center">
-    <button mat-raised-button (click)="updateJob()" color="primary">Update Job</button>
-  </mat-card-actions>
-</mat-card>
+    <div fxFlex="50%">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Update Project</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form *ngIf="!loadingForm">
+            <table [formGroup]="projectForm">
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Street Address" formControlName="projectStreetAddress" name="projectStreetAddress">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="City" formControlName="projectCity" name="projectCity">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="State" formControlName="projectState" name="projectState">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput placeholder="Zipcode" formControlName="projectZipcode" name="projectZipcode">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="date" placeholder="Estimate Date" formControlName="projectEstimateDate" name="projectEstimateDate">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="date" placeholder="Specification Date" formControlName="projectSpecificationDate" name="projectSpecificationDate">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="date" placeholder="Commencement Date" formControlName="projectCommencementDate" name="projectCommencementDate">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="number" min="0" step="1" placeholder="Approximate Working Days" formControlName="projectApproximateWorkingDays" name="projectApproximateWorkingDays">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="number" min="0" step="1" placeholder="Price" formControlName="projectPrice" name="projectPrice">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <input matInput type="number" min="0" step="1" placeholder="Down Payment Percentage" formControlName="projectDownPaymentPercentage" name="projectDownPaymentPercentage">
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+          </form>
+          <div *ngIf="loadingForm" class="center-card">
+            <mat-progress-spinner *ngIf="loadingForm" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="center">
+          <button mat-raised-button (click)="updateProject()" color="primary">Update Project</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

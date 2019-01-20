@@ -68,9 +68,9 @@ async function getContract(req, res) {
     if(!input) return input;
     try {
       const d = new Date(input);
-      let day = d.getDate();
-      let mon = d.getMonth()+1;
-      let year = d.getFullYear();
+      let day = d.getUTCDate();
+      let mon = d.getUTCMonth()+1;
+      let year = d.getUTCFullYear();
       const date_string = mon+'/'+day+'/'+year;
       return date_string;
     } catch (ex) {
@@ -82,8 +82,8 @@ async function getContract(req, res) {
     try {
       let options = { month: 'long' };
       const d = new Date(input);
-      const date_string = `${d.toLocaleDateString("en-US", options)}, ${d.getFullYear()}`;
-      return `${converter.toOrdinal(d.getDate())} day of ${date_string}`;
+      const date_string = `${d.toLocaleDateString("en-US", options)}, ${d.getUTCFullYear()}`;
+      return `${converter.toOrdinal(d.getUTCDate())} day of ${date_string}`;
     } catch (ex) {
       return undefined;
     }
@@ -95,7 +95,7 @@ async function getContract(req, res) {
       let options = { month: 'long' };
       const d = new Date(input);
       const month_string = d.toLocaleDateString("en-US", options);
-      return `${month_string} ${converter.toOrdinal(d.getDate())}, ${d.getFullYear()}`;
+      return `${month_string} ${converter.toOrdinal(d.getUTCDate())}, ${d.getUTCFullYear()}`;
     } catch (ex) {
       return undefined;
     }
@@ -110,35 +110,8 @@ async function getContract(req, res) {
   var doc = new Docxtemplater().loadZip(zip).setOptions({parser:angularParser});
 
   let data = {
-      today,
+      today: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
       job: job.toJSON(),
-  };
-  data.job['project'] = {
-    address: {
-      street: '123 test st',
-      city: 'Testingville',
-      state: 'FL',
-      zipcode: '80532'
-    },
-    plans: [{
-      description: 'Test desc #1',
-      consultant: 'Mr. Test Consultant',
-      origination_date: '2017-03-19T03:09:07.665Z',
-      revision_date: '2018-07-14T03:09:07.665Z'
-    }, {
-      description: 'Test desc #2',
-      consultant: 'Mrs. Test',
-      origination_date: '2017-04-20T07:09:07.665Z',
-      revision_date: '2017-06-27T06:09:07.665Z'
-    }],
-    estimate_date: '2016-05-19T11:09:07.665Z',
-    specification_date: '2016-08-21T11:09:07.665Z',
-    commencement_date: '2019-10-12T11:09:07.665Z',
-    approx_working_days: 1294,
-    price: 52316425.14,
-    down_payment: {
-      percentage: 10,
-    },
   };
   data.job['description'] = 'This is a test description. TEST TEST TESTING...';
   // console.log(data);
