@@ -1,14 +1,18 @@
 <div fxLayout="column">
-  <div fxFlex="100%">
+  <div fxFlex="100%" class="bot-margin">
     <mat-card>
       <mat-card-content>
-        <button mat-raised-button routerLink="/job/list" color="primary"><mat-icon>arrow_back</mat-icon> Back to Job List</button>
+        <button mat-raised-button class="v-align-middle" routerLink="/" color="primary">Home</button>
+        <mat-icon class="v-align-middle">keyboard_arrow_right</mat-icon>
+        <button mat-raised-button class="v-align-middle" routerLink="/job/list" color="primary">Jobs</button>
+        <mat-icon class="v-align-middle">keyboard_arrow_right</mat-icon>
+        <span class="v-align-middle">Detail</span>
       </mat-card-content>
     </mat-card>
   </div>
-  <div fxLayout="row" fxLayout.md="column">
-    <div fxFlex="50%">
-      <mat-card>
+  <div fxLayout="row" fxLayout.lt-lg="column">
+    <div fxFlex="50%" fxFlex.lt-lg="100%">
+      <mat-card class="some-margin">
         <mat-card-header>
           <mat-card-title>Update Job</mat-card-title>
         </mat-card-header>
@@ -83,8 +87,8 @@
         </mat-card-actions>
       </mat-card>
     </div>
-    <div fxFlex="50%">
-      <mat-card>
+    <div fxFlex="50%" fxFlex.lt-lg="100%">
+      <mat-card class="some-margin">
         <mat-card-header>
           <mat-card-title>Update Project</mat-card-title>
         </mat-card-header>

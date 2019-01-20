@@ -107,7 +107,7 @@ export class JobDetailComponent implements OnInit {
           this.projectStreetAddress.setValue(res.data.project.address.street);
           this.projectCity.setValue(res.data.project.address.city);
           this.projectState.setValue(res.data.project.address.state);
-          this.projectZipcode.setValue(res.data.project.address.zip);
+          this.projectZipcode.setValue(res.data.project.address.zipcode);
         }
         if (project.estimateDate) {
           this.projectEstimateDate.setValue(new Date(res.data.project.estimateDate).toISOString().substring(0,10));
