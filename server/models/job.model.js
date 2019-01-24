@@ -116,7 +116,8 @@ const JobSchema = new mongoose.Schema({
     downPayment: {
       isPercentage: {
         type: Boolean,
-        required: true,
+        required: false,
+        default: true,
       },
       percentage: {
         type: Number,
