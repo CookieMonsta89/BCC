@@ -32,6 +32,7 @@ export class JobDetailComponent implements OnInit {
     ownerZipcode: new FormControl('', [Validators.required]),
   });
   projectForm = new FormGroup({
+    projectDescription: new FormControl('', []),
     projectStreetAddress: new FormControl('', []),
     projectCity: new FormControl('', []),
     projectState: new FormControl('', []),
@@ -41,8 +42,11 @@ export class JobDetailComponent implements OnInit {
     projectCommencementDate: new FormControl('', []),
     projectApproximateWorkingDays: new FormControl('', []),
     projectPrice: new FormControl('', []),
+    projectDownPaymentType: new FormControl('', []),
     projectDownPaymentPercentage: new FormControl('', []),
+    projectDownPaymentAmount: new FormControl('', []),
   });
+
   get jobNumber(): any { return this.jobForm.get('jobNumber'); }
   get ownerPhoneNumber(): any { return this.jobForm.get('ownerPhoneNumber'); }
   get ownerEmail(): any { return this.jobForm.get('ownerEmail'); }
@@ -52,6 +56,7 @@ export class JobDetailComponent implements OnInit {
   get ownerCity(): any { return this.jobForm.get('ownerCity'); }
   get ownerState(): any { return this.jobForm.get('ownerState'); }
   get ownerZipcode(): any { return this.jobForm.get('ownerZipcode'); }
+  get projectDescription(): any { return this.projectForm.get('projectDescription'); }
   get projectStreetAddress(): any { return this.projectForm.get('projectStreetAddress'); }
   get projectCity(): any { return this.projectForm.get('projectCity'); }
   get projectState(): any { return this.projectForm.get('projectState'); }
@@ -61,7 +66,9 @@ export class JobDetailComponent implements OnInit {
   get projectCommencementDate(): any { return this.projectForm.get('projectCommencementDate'); }
   get projectApproximateWorkingDays(): any { return this.projectForm.get('projectApproximateWorkingDays'); }
   get projectPrice(): any { return this.projectForm.get('projectPrice'); }
+  get projectDownPaymentType(): any { return this.projectForm.get('projectDownPaymentType'); }
   get projectDownPaymentPercentage(): any { return this.projectForm.get('projectDownPaymentPercentage'); }
+  get projectDownPaymentAmount(): any { return this.projectForm.get('projectDownPaymentAmount'); }
 
   constructor(
     private http : HttpClient,
@@ -103,6 +110,7 @@ export class JobDetailComponent implements OnInit {
         this.ownerState.setValue(res.data.owner.address.state);
         this.ownerZipcode.setValue(res.data.owner.address.zipcode);
         const project = res.data.project;
+        this.projectDescription.setValue(res.data.project.description);
         if (project && project.address) {
           this.projectStreetAddress.setValue(res.data.project.address.street);
           this.projectCity.setValue(res.data.project.address.city);
@@ -121,7 +129,13 @@ export class JobDetailComponent implements OnInit {
         this.projectApproximateWorkingDays.setValue(res.data.project.approxWorkingDays);
         this.projectPrice.setValue(res.data.project.price);
         if (project && project.downPayment) {
+          if (project.downPayment.isPercentage) {
+            this.projectDownPaymentType.setValue('percentage');
+          } else {
+            this.projectDownPaymentType.setValue('amount');
+          }
           this.projectDownPaymentPercentage.setValue(res.data.project.downPayment.percentage);
+          this.projectDownPaymentAmount.setValue(res.data.project.downPayment.amount);
         }
       }
     }, (err: any) => {
@@ -208,6 +222,7 @@ export class JobDetailComponent implements OnInit {
     }
 
     let {
+      projectDescription,
       projectStreetAddress,
       projectCity,
       projectState,
@@ -217,7 +232,9 @@ export class JobDetailComponent implements OnInit {
       projectCommencementDate,
       projectApproximateWorkingDays,
       projectPrice,
-      projectDownPaymentPercentage
+      projectDownPaymentType,
+      projectDownPaymentPercentage,
+      projectDownPaymentAmount
     } = this.projectForm.getRawValue();
 
     let {
@@ -227,6 +244,7 @@ export class JobDetailComponent implements OnInit {
     const body = {
       number: jobNumber,
       project: {
+        description: projectDescription,
         address: {
           street: projectStreetAddress,
           city: projectCity,
@@ -239,7 +257,9 @@ export class JobDetailComponent implements OnInit {
         approxWorkingDays: projectApproximateWorkingDays,
         price: projectPrice,
         downPayment : {
+          isPercentage: projectDownPaymentType === 'percentage',
           percentage: projectDownPaymentPercentage,
+          amount: projectDownPaymentAmount,
         },
       }
     }

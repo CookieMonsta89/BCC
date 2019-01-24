@@ -93,8 +93,11 @@
           <mat-card-title>Update Project</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <form *ngIf="!loadingForm">
-            <table [formGroup]="projectForm">
+          <form *ngIf="!loadingForm"  [formGroup]="projectForm">
+            <mat-form-field class="full-width">
+              <textarea matInput class="full-width" placeholder="Description" formControlName="projectDescription" name="projectDescription"></textarea>
+            </mat-form-field>
+            <table>
               <tr>
                 <td>
                   <mat-form-field>
@@ -125,15 +128,11 @@
                     <input matInput type="date" placeholder="Estimate Date" formControlName="projectEstimateDate" name="projectEstimateDate">
                   </mat-form-field>
                 </td>
-              </tr>
-              <tr>
                 <td>
                   <mat-form-field>
                     <input matInput type="date" placeholder="Specification Date" formControlName="projectSpecificationDate" name="projectSpecificationDate">
                   </mat-form-field>
                 </td>
-              </tr>
-              <tr>
                 <td>
                   <mat-form-field>
                     <input matInput type="date" placeholder="Commencement Date" formControlName="projectCommencementDate" name="projectCommencementDate">
@@ -146,16 +145,33 @@
                     <input matInput type="number" min="0" step="1" placeholder="Approximate Working Days" formControlName="projectApproximateWorkingDays" name="projectApproximateWorkingDays">
                   </mat-form-field>
                 </td>
-              </tr>
-              <tr>
                 <td>
                   <mat-form-field>
                     <input matInput type="number" min="0" step="1" placeholder="Price" formControlName="projectPrice" name="projectPrice">
+                    <span matPrefix>$&nbsp;</span>
                   </mat-form-field>
                 </td>
+              </tr>
+              <tr>
                 <td>
+                  <div fxLayout="column" fxLayoutGap="15px">
+                    <label>Down Payment Type</label>
+                    <mat-radio-group formControlName="projectDownPaymentType" name="projectDownPaymentType">
+                      <mat-radio-button color="primary" class="right-margin" value="percentage">Percentage</mat-radio-button>
+                      <mat-radio-button color="primary" value="amount">Amount</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </td>
+                <td *ngIf="projectDownPaymentType.value === 'percentage'">
                   <mat-form-field>
                     <input matInput type="number" min="0" step="1" placeholder="Down Payment Percentage" formControlName="projectDownPaymentPercentage" name="projectDownPaymentPercentage">
+                    <span matSuffix>%</span>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="projectDownPaymentType.value !== 'percentage'">
+                  <mat-form-field>
+                    <input matInput type="number" min="0" placeholder="Down Payment Amount" formControlName="projectDownPaymentAmount" name="projectDownPaymentAmount">
+                    <span matPrefix>$&nbsp;</span>
                   </mat-form-field>
                 </td>
               </tr>

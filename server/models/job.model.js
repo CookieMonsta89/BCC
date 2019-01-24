@@ -53,6 +53,10 @@ const JobSchema = new mongoose.Schema({
     },
   },
   project: {
+    description: {
+      type: String,
+      required: false,
+    },
     address: {
       street: {
         type: String,
@@ -110,7 +114,15 @@ const JobSchema = new mongoose.Schema({
       required: false,
     },
     downPayment: {
+      isPercentage: {
+        type: Boolean,
+        required: true,
+      },
       percentage: {
+        type: Number,
+        required: false,
+      },
+      amount: {
         type: Number,
         required: false,
       },

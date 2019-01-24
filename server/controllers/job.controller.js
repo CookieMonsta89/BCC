@@ -19,6 +19,7 @@ const JobSchema = Joi.object({
     phoneNumber: Joi.string().regex(/^\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/).required(),
   },
   project: {
+    description: Joi.string().empty('').allow(null).optional(),
     address: {
       street: Joi.string().empty('').allow(null).optional(),
       city: Joi.string().empty('').allow(null).optional(),
@@ -31,7 +32,9 @@ const JobSchema = Joi.object({
     approxWorkingDays: Joi.number().empty('').allow(null).optional().integer().min(0),
     price: Joi.number().empty('').allow(null).optional().min(0),
     downPayment: {
+      isPercentage: Joi.boolean().required(),
       percentage: Joi.number().empty('').allow(null).optional().integer().min(0).max(100),
+      amount: Joi.number().empty('').allow(null).optional().min(0),
     }
   }
 });
@@ -46,7 +49,9 @@ module.exports = {
 
 async function insert(job) {
   job = await Joi.validate(job, JobSchema, { abortEarly: false });
-  job.owner.phoneNumber = job.owner.phoneNumber.match(/\d/g).map(Number).join('');
+  if (job.owner && job.owner.phoneNumber) {
+    job.owner.phoneNumber = job.owner.phoneNumber.match(/\d/g).map(Number).join('');
+  }
   return await new Job(job).save();
 }
 
@@ -55,7 +60,6 @@ async function update(job) {
   if (job.owner && job.owner.phoneNumber) {
     job.owner.phoneNumber = job.owner.phoneNumber.match(/\d/g).map(Number).join('');
   }
-  console.log(job);
   return await Job.updateOne({ number: job.number }, job);
 }
 

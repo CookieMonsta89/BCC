@@ -25,6 +25,7 @@ import {
   MatProgressSpinnerModule,
   MatFormFieldModule,
   MatSelectModule,
+  MatRadioModule,
 } from '@angular/material';
 
 @NgModule({
@@ -53,6 +54,7 @@ import {
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatRadioModule,
     FlexLayoutModule,
   ],
   exports: [
@@ -79,6 +81,7 @@ import {
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatRadioModule,
     FlexLayoutModule,
   ],
   declarations: [],
