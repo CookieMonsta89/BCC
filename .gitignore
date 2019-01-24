@@ -45,3 +45,6 @@ Thumbs.db
 
 # Env file
 *.env
+
+# Contract Files
+/server/contracts/*.docx

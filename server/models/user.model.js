@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   },
   roles: [{
     type: String,
-    enum: ["admin","general"]
+    enum: ["admin","general","customer"]
   }]
 }, {
   versionKey: false

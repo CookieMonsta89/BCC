@@ -38,7 +38,7 @@ const JobSchema = new mongoose.Schema({
         required: true,
       },
       zipcode: {
-        type: Number,
+        type: String,
         required: true,
       },
     },
@@ -50,6 +50,82 @@ const JobSchema = new mongoose.Schema({
         if (!ph) { return ''; }
         return `(${ph.slice(0, 3)}) ${ph.slice(3, 6)}-${ph.slice(6, 10)}`;
       }
+    },
+  },
+  project: {
+    description: {
+      type: String,
+      required: false,
+    },
+    address: {
+      street: {
+        type: String,
+        required: false,
+      },
+      city: {
+        type: String,
+        required: false,
+      },
+      state: {
+        type: String,
+        required: false,
+      },
+      zipcode: {
+        type: String,
+        required: false,
+      },
+    },
+    plans: [{
+      description: {
+        type: String,
+        required: false,
+      },
+      consultant: {
+        type: String,
+        required: false,
+      },
+      originationDate: {
+        type: Date,
+        required: false,
+      },
+      revisionDate: {
+        type: Date,
+        required: false,
+      },
+    }],
+    estimateDate: {
+      type: Date,
+      required: false,
+    },
+    specificationDate: {
+      type: Date,
+      required: false,
+    },
+    commencementDate: {
+      type: Date,
+      required: false,
+    },
+    approxWorkingDays: {
+      type: Number,
+      required: false,
+    },
+    price: {
+      type: Number,
+      required: false,
+    },
+    downPayment: {
+      isPercentage: {
+        type: Boolean,
+        required: true,
+      },
+      percentage: {
+        type: Number,
+        required: false,
+      },
+      amount: {
+        type: Number,
+        required: false,
+      },
     },
   },
   createdAt: {

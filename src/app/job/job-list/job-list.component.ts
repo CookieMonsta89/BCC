@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/f
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { NotifierService } from 'angular-notifier';
+import { saveAs } from 'file-saver';
 import { Job } from '../job.model';
 
 @Component({
@@ -94,6 +95,7 @@ export class JobListComponent implements OnInit {
   ngOnInit() {
     this.displayedColumns = this.columnDefs.map(cd => cd.name);
     this.displayedColumns.push('updateButtonColumn');
+    this.displayedColumns.push('createContractColumn');
     this.loadingTable = false;
     this.loadingForm = false;
     this.loadTable();
@@ -204,6 +206,27 @@ export class JobListComponent implements OnInit {
 
   goToDetails(row) {
     this.router.navigate([`/job/detail/${row.number}`]);
+  }
+
+  createContract(row) {
+    this.http.get(`/api/jobs/${row.number}/contract`, { responseType: 'blob', observe: 'response' }).subscribe((res : any) => {
+      this.saveAsBlob(res, this.getFileNameFromHttpResponse(res));
+      this.notifier.notify('success', 'Job contract created successfully.');
+    }, err => {
+      this.notifier.notify('error', `Failed to create Job contract. ${err.message}`);
+    });
+  }
+
+  getFileNameFromHttpResponse(httpResponse) {
+    var contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
+    var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+    return result.replace(/"/g, '');
+  }
+
+  private saveAsBlob(data: any, filename: string) {
+    const blob = new Blob([data.body], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    const file = new File([blob], filename);
+    saveAs(file);
   }
 
 }
