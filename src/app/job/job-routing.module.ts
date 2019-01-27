@@ -19,6 +19,9 @@ const routes: Routes = [{
     path: 'detail/:number',
     canActivate: [AuthGuard],
     component: JobDetailComponent
+  }, {
+    path: '**',
+    redirectTo: '/job/list'
   }]
 }];
 

@@ -26,11 +26,16 @@ module.exports = {
 }
 
 async function insert(user) {
-  user = await Joi.validate(user, userCreateSchema, { abortEarly: false });
-  user.hashedPassword = bcrypt.hashSync(user.password, 15);
-  delete user.password;
-  delete user.repeatPassword;
-  return await new User(user).save();
+  try {
+    user = await Joi.validate(user, userCreateSchema, { abortEarly: false });
+    user.hashedPassword = bcrypt.hashSync(user.password, 15);
+    delete user.password;
+    delete user.repeatPassword;
+    return await new User(user).save();
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
 }
 
 async function getAll() {

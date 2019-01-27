@@ -46,8 +46,8 @@ export class UserListComponent implements OnInit {
   userForm = new FormGroup({
     fullname: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', []),
-    repeatPassword: new FormControl('', [this.passwordsMatchValidator]),
+    password: new FormControl('', [Validators.required]),
+    repeatPassword: new FormControl('', [Validators.required, this.passwordsMatchValidator]),
     role: new FormControl('', [Validators.required]),
   });
 
@@ -79,13 +79,6 @@ export class UserListComponent implements OnInit {
   get role(): any { return this.userForm.get('role'); }
 
   createOrUpdateUser() {
-
-    if(!this.userForm.valid || (this.userId && (!this.password || !this.repeatPassword))) {
-      this.notifier.notify('warning', 'User form is not valid. Please try again.');
-      this.validateAllFormFields(this.userForm);
-      return;
-    }
-
     let {
       fullname,
       email,
@@ -93,6 +86,12 @@ export class UserListComponent implements OnInit {
       repeatPassword,
       role,
     } = this.userForm.getRawValue();
+
+    if(!this.userForm.valid && !(this.userId && !password && !repeatPassword)) {
+      this.notifier.notify('warning', 'User form is not valid. Please try again.');
+      this.validateAllFormFields(this.userForm);
+      return;
+    }
 
     this.loadingForm = true;
     if (!this.userId) {
