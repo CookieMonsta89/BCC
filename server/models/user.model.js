@@ -20,17 +20,19 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  roles: [{
+  role: {
     type: String,
-    enum: ["admin","general","customer"]
-  }]
+    enum: ["admin","employee","customer"]
+  },
 }, {
-  versionKey: false
+  versionKey: false,
+  toObject: {getters: true, virtuals: true},
+  toJSON: {getters: true, virtuals: true}
 });
 
 UserSchema.pre("save",function(next) {
-  if (this.roles.length == 0) {
-    this.roles.push("general");
+  if (!this.role) {
+    this.role = "customer";
   }
   next();
 });

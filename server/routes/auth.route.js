@@ -22,7 +22,11 @@ async function register(req, res, next) {
 }
 
 function login(req, res) {
-  let user = req.user;
-  let token = authCtrl.generateToken(user);
-  res.json({success: true, data: { user, token } });
+  if (req.user) {
+    let user = req.user;
+    let token = authCtrl.generateToken(user);
+    res.json({success: true, data: { user, token } });
+  } else {
+    res.json({success: false, errors: ['Unable to verify user and login.'] });
+  }
 }

@@ -53,8 +53,47 @@ export class AuthService {
     });
   }
 
+  createUser(fullname : string, email : string, password : string, repeatPassword : string, role : string) : Observable <any> {
+    return Observable.create(observer => {
+      this.http.post('/api/users', {
+        fullname,
+        email,
+        password,
+        repeatPassword,
+        role,
+      }).subscribe((data : any) => {
+        observer.next(data);
+        observer.complete();
+      })
+    });
+  }
+
+  updateUser(userId: string, fullname: string, email: string, password: string, repeatPassword: string, role: string) : Observable <any> {
+    return Observable.create(observer => {
+      this.http.put(`/api/users/${userId}`, {
+        fullname,
+        email,
+        password,
+        repeatPassword,
+        role,
+      }).subscribe((data : any) => {
+        observer.next(data);
+        observer.complete();
+      })
+    });
+  }
+
+  deleteUser(id: string) : Observable <any> {
+    return Observable.create(observer => {
+      this.http.delete(`/api/users/${id}`).subscribe((data : any) => {
+        observer.next(data);
+        observer.complete();
+      });
+    });
+  }
+
   setUser(user): void {
-    if (user) user.isAdmin = (user.roles.indexOf('admin') > -1);
+    if (user) user.isAdmin = (user.role === 'admin');
     this.$userSource.next(user);
     (<any>window).user = user;
   }

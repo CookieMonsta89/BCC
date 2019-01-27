@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 export class HomeComponent {
 
   constructor() { }
+
+  isAdminUser() {
+    const user = (<any>window).user;
+    return user && user.isAdmin;
+  }
 }

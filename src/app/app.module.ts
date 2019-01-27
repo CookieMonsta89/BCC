@@ -8,6 +8,7 @@ import { NotifierModule } from 'angular-notifier';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { JobModule } from './job/job.module';
+import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 
@@ -33,6 +34,7 @@ import { HomeComponent } from './home/home.component';
     AuthModule,
     AdminModule,
     JobModule,
+    UserModule,
     NotifierModule,
     AppRoutingModule,
   ],

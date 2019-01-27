@@ -1,0 +1,43 @@
+.table-cell {
+  white-space: pre-wrap;
+}
+
+.bot-margin {
+  margin-bottom: 20px;
+}
+
+.v-align-middle {
+  vertical-align: middle;
+}
+
+.center-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-table-filter {
+  width: calc(100% - 40px);
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.most-width {
+  width: 75%;
+  margin: 20px;
+}
+
+.user-table {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mat-column-updateButtonColumn, .mat-column-deleteButtonColumn {
+  flex: 0 0 75px;
+}
+
+.right-margin {
+  margin-right: 10px;
+}

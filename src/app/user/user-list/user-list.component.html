@@ -5,7 +5,7 @@
         <section layout="row">
           <button mat-raised-button class="v-align-middle" routerLink="/" color="primary">Home</button>
           <mat-icon class="v-align-middle">keyboard_arrow_right</mat-icon>
-          <span class="v-align-middle">Jobs</span>
+          <span class="v-align-middle">Users</span>
         </section>
       </mat-card-content>
     </mat-card>
@@ -16,66 +16,49 @@
     <div fxFlex="auto">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Add New Job</mat-card-title>
+          <mat-card-title>{{ createOrUpdateText() }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <form *ngIf="!loadingForm">
-            <table [formGroup]="jobForm">
+          <form class="example-form" *ngIf="!loadingForm">
+            <table cellspacing="0" [formGroup]="userForm">
               <tr>
                 <td>
                   <mat-form-field>
-                    <input matInput placeholder="Job Number" formControlName="jobNumber" name="jobNumber" required>
+                    <input matInput placeholder="Full Name" formControlName="fullname" name="fullname" required>
                   </mat-form-field>
                 </td>
               </tr>
               <tr>
                 <td>
                   <mat-form-field>
-                    <input matInput placeholder="First Name" formControlName="ownerFirstName" name="ownerFirstName" required>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <input matInput placeholder="Last Name" formControlName="ownerLastName" name="ownerLastName" required>
+                    <input matInput placeholder="Email" formControlName="email" name="email" required>
+                    <mat-error *ngIf="email.invalid && email.errors.email">Invalid email address</mat-error>
                   </mat-form-field>
                 </td>
               </tr>
               <tr>
                 <td>
                   <mat-form-field>
-                    <input matInput placeholder="Phone Number" formControlName="ownerPhoneNumber" name="ownerPhoneNumber" required>
-                    <mat-error *ngIf="ownerPhoneNumber.invalid && ownerPhoneNumber.errors.pattern">Invalid phone number</mat-error>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <input matInput placeholder="Email" formControlName="ownerEmail" name="ownerEmail" required>
-                    <mat-error *ngIf="ownerEmail.invalid && ownerEmail.errors.email">Invalid email address</mat-error>
+                    <input matInput placeholder="Password" formControlName="password" type="password" name="password">
                   </mat-form-field>
                 </td>
               </tr>
               <tr>
                 <td>
                   <mat-form-field>
-                    <input matInput placeholder="Street Address" formControlName="ownerStreetAddress" name="ownerStreetAddress" required>
+                    <input matInput placeholder="Reapet Password" formControlName="repeatPassword" type="password" name="repeatPassword">
+                    <mat-error *ngIf="repeatPassword.invalid && repeatPassword.errors.passwordMatch">Password mismatch</mat-error>
                   </mat-form-field>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <mat-form-field>
-                    <input matInput placeholder="City" formControlName="ownerCity" name="ownerCity" required>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <input matInput placeholder="State" formControlName="ownerState" name="ownerState" required>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <input matInput placeholder="Zipcode" formControlName="ownerZipcode" name="ownerZipcode" required>
-                  </mat-form-field>
+                  <label for="role" class="right-margin">Role</label>
+                  <mat-radio-group formControlName="role" name="role">
+                    <mat-radio-button color="primary" class="right-margin" value="admin">Admin</mat-radio-button>
+                    <mat-radio-button color="primary" class="right-margin" value="employee">Employee</mat-radio-button>
+                    <mat-radio-button color="primary" class="right-margin" value="customer">Customer</mat-radio-button>
+                  </mat-radio-group>
                 </td>
               </tr>
             </table>
@@ -85,7 +68,7 @@
           </div>
         </mat-card-content>
         <mat-card-actions align="center">
-          <button mat-raised-button (click)="createJob()" color="primary">Create Job</button>
+          <button mat-raised-button (click)="createOrUpdateUser()" color="primary">{{ createOrUpdateText() }}</button>
         </mat-card-actions>
       </mat-card>
     </div>
@@ -95,18 +78,18 @@
   <div fxFlex="row">
     <div fxFlex>
       <div *ngIf="!loadingTable">
-        <div class="mat-elevation-z8 job-table-filter">
+        <div class="mat-elevation-z8 user-table-filter">
           <mat-form-field class="most-width">
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Jobs">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter Users">
           </mat-form-field>
         </div>
 
         <mat-card *ngIf="!dataSource?.filteredData.length">
-          <div><span>Zero Jobs match the filter</span></div>
+          <div><span>Zero Users match the filter</span></div>
         </mat-card>
       </div>
 
-      <mat-card *ngIf="dataSource?.filteredData.length || loadingTable" class="job-table">
+      <mat-card *ngIf="dataSource?.filteredData.length || loadingTable" class="user-table">
         <mat-table #table [dataSource]="dataSource" matSort>
           <ng-container *ngFor="let col of columnDefs" [matColumnDef]="col.name">
             <mat-header-cell *matHeaderCellDef mat-sort-header>{{ col.title }}</mat-header-cell>
@@ -122,10 +105,10 @@
             </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="createContractColumn">
-            <mat-header-cell *matHeaderCellDef>Create Contract</mat-header-cell>
+          <ng-container matColumnDef="deleteButtonColumn">
+            <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
             <mat-cell class="table-cell" *matCellDef="let row">
-              <button mat-raised-button (click)="createContract(row)" color="primary"><mat-icon>description</mat-icon></button>
+              <button mat-raised-button (click)="deleteUser(row)" color="primary"><mat-icon>delete</mat-icon></button>
             </mat-cell>
           </ng-container>
 

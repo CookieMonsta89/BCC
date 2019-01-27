@@ -145,14 +145,6 @@ export class JobDetailComponent implements OnInit {
     });
   }
 
-  createDateObject(dateString) {
-    const d = new Date(dateString);
-    const year = d.getFullYear();
-    const month = d.getMonth();
-    const day = d.getDate();
-    return {year, month, day};
-  }
-
   validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);
